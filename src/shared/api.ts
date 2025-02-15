@@ -4,10 +4,18 @@ export type User = {
 };
 
 export function fetchUsers() {
-  return fetch("http://localhost:3001/users").then((res) => res.json() as Promise<User[]>);
+  return fetch("http://localhost:3001/users").then((res) => {
+    if (!res.ok) {
+      throw new Error(`Failed to fetch users: ${res.statusText}`);
+    }
+    return res.json() as Promise<User[]>;
+  }).catch((error) => {
+    throw new Error(`Failed to fetch users: ${error.message}`);
+  });
 }
 
 export function createUser(user: User) {
+//   throw new Error("Not implemented");
   return fetch("http://localhost:3001/users", {
     method: "POST",
     headers: {

@@ -2,48 +2,28 @@
   "tasks": [],
   "users": [
     {
-      "id": "559a26ae-815d-4231-86f5-1296db5f8577",
-      "email": ""
+      "id": "4fe4e3ee-535c-4d23-89f6-9ad938eda92d",
+      "email": "test@gmail.com"
     },
     {
-      "id": "33a79f6d-255a-4a81-b428-e8c4dff38c03",
-      "email": "evgenii@gmail.com"
+      "id": "f7f0d22c-1c6c-45b4-a22b-c01b5edc4e6c",
+      "email": "admin@gmail.com"
     },
     {
-      "id": "8c944b33-28ae-417c-be0b-e5f844aae652",
-      "email": "sami@test.com"
+      "id": "cc058a71-f053-46bc-b6be-12e19b8284f3",
+      "email": "admin1@gmail.com"
     },
     {
-      "id": "557bf71e-f1a2-4e8f-90aa-1f1659d4a9ea",
-      "email": ""
+      "id": "f476cca4-b9ae-4489-a841-4bbe183a4628",
+      "email": "sami@gmail.com"
     },
     {
-      "id": "5bee9ffd-9981-4ed7-abb5-7ff95d7c5e54",
-      "email": ""
+      "id": "728d504e-edbd-4651-9434-c551a31eebc7",
+      "email": "admin09@gmail.com"
     },
     {
-      "id": "e93cc4e5-228b-46d1-9452-8063f8f0f1a7",
-      "email": ""
-    },
-    {
-      "id": "5fe1edaf-2205-4f37-8be6-4e63f1c55ac2",
-      "email": ""
-    },
-    {
-      "id": "ad97e071-d049-4cb5-be42-d8d4899f9959",
-      "email": ""
-    },
-    {
-      "id": "8a1e0039-51e3-4b54-b5d5-1ad5292c819e",
-      "email": ""
-    },
-    {
-      "id": "5dabc0cc-a047-4422-9b5c-e4c42b3eaf29",
-      "email": ""
-    },
-    {
-      "id": "e04a741c-5622-45aa-a82a-64f59ae56963",
-      "email": "sr@fff.com"
+      "id": "36325fdd-7a4d-4f43-9905-caeee48bc179",
+      "email": "admin2@gmail.com"
     }
   ]
 }
