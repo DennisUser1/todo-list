@@ -1,11 +1,10 @@
 import {
   Suspense,
-  use,
   useActionState,
   //   useTransition,
 } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { createUserAction, deleteUserAction } from "./action";
+import { CreateUserAction, DeleteUserAction } from "./action";
 import { useUsers } from "./use-users";
 
 type User = {
@@ -22,7 +21,7 @@ function ErrorFallback({ error }: { readonly error: unknown }) {
 }
 
 export function UsersPage() {
-  const [usersPromise, refetchUsers] = useUsers();
+  const {useUsersList, createUserAction, deleteUserAction} = useUsers();
 
   //   const [users, setUsers] = useState<User[]>([]);
   //   const [email, setEmail] = useState("");
@@ -40,10 +39,10 @@ export function UsersPage() {
   return (
     <main className="container mx-auto p-4 pt-10 flex flex-col gap-4">
       <h1 className="text-3xl font-bold underline">Users</h1>
-      <CreateUserForm refetchUsers={refetchUsers} />
+      <CreateUserForm createUserAction={createUserAction} />
       <ErrorBoundary fallbackRender={ErrorFallback}>
         <Suspense fallback={<div>Loading...</div>}>
-          <UsersList usersPromise={usersPromise} refetchUsers={refetchUsers} />
+          <UsersList useUsersList={useUsersList} deleteUserAction={deleteUserAction} />
         </Suspense>
       </ErrorBoundary>
     </main>
@@ -51,18 +50,19 @@ export function UsersPage() {
 }
 
 export function CreateUserForm({
-  refetchUsers,
+//   refetchUsers,
+createUserAction,
 }: {
-  readonly refetchUsers: () => void;
+//   readonly refetchUsers: () => void;
+readonly createUserAction: CreateUserAction;
 }) {
   //   const [email, setEmail] = useState(""); // Replaced by the uncontrolled form
   //   const [isPending, startTransition] = useTransition();
-  const [state, dispatch, isPending] = useActionState(
-    createUserAction({
-      refetchUsers,
-      // setEmail
-    }),
-    { email: "" }
+  const [state, dispatch, isPending] = useActionState(createUserAction, { email: "" }
+    // createUserAction({
+    //   refetchUsers,
+    //   // setEmail
+    // }),
   );
 
   //   const handleSubmit = async (event: React.FormEvent) => {
@@ -101,18 +101,22 @@ export function CreateUserForm({
 }
 
 export function UsersList({
-  usersPromise,
-  refetchUsers,
+  deleteUserAction,
+  useUsersList
+//   usersPromise,
+//   refetchUsers,
 }: {
-  readonly usersPromise: Promise<User[]>;
-  readonly refetchUsers: () => void;
+  readonly deleteUserAction: DeleteUserAction;
+  readonly useUsersList: () => User[];
+//   readonly usersPromise: Promise<User[]>;
+//   readonly refetchUsers: () => void;
 }) {
   //   throw new Error("Test Error Boundary in UsersList");
-  const users = use(usersPromise);
+  const users = useUsersList();
   return (
     <div className="flex flex-col gap-2">
       {users.map((user) => (
-        <UserCard key={user.id} user={user} refetchUsers={refetchUsers} />
+        <UserCard key={user.id} user={user} deleteUserAction={deleteUserAction} />
       ))}
     </div>
   );
@@ -120,10 +124,10 @@ export function UsersList({
 
 export function UserCard({
   user,
-  refetchUsers,
+  deleteUserAction,
 }: {
   readonly user: User;
-  readonly refetchUsers: () => void;
+  readonly deleteUserAction: DeleteUserAction;
 }) {
   //   const [isPending, startTransition] = useTransition();
 
@@ -134,20 +138,18 @@ export function UserCard({
   //     });
   //   };
 
-  const [state, handleDelete, isPending] = useActionState(
-    deleteUserAction({ id: user.id, refetchUsers }),
-    {}
-  );
+  const [state, handleDelete, isPending] = useActionState(deleteUserAction, {});
 
   return (
     <>
       <div className="border p-2 rounded bg-gray-100 flex gap-2 items-center">
         {user.email}
         <form action={handleDelete} className="ml-auto">
+          <input type="hidden" name="id" value={user.id} />
           <button
+            disabled={isPending}
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-auto disabled:bg-gray-400"
             //   type="button"
-            disabled={isPending}
             //   onClick={handleDelete}
             //   formAction={handleDelete}
           >

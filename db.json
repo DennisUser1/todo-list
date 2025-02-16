@@ -2,28 +2,12 @@
   "tasks": [],
   "users": [
     {
-      "id": "4fe4e3ee-535c-4d23-89f6-9ad938eda92d",
-      "email": "test@gmail.com"
+      "id": "e07caa0e-583b-4d60-9f9a-3c88fe5ae6b6",
+      "email": ""
     },
     {
-      "id": "f7f0d22c-1c6c-45b4-a22b-c01b5edc4e6c",
-      "email": "admin@gmail.com"
-    },
-    {
-      "id": "cc058a71-f053-46bc-b6be-12e19b8284f3",
-      "email": "admin1@gmail.com"
-    },
-    {
-      "id": "f476cca4-b9ae-4489-a841-4bbe183a4628",
-      "email": "sami@gmail.com"
-    },
-    {
-      "id": "728d504e-edbd-4651-9434-c551a31eebc7",
-      "email": "admin09@gmail.com"
-    },
-    {
-      "id": "36325fdd-7a4d-4f43-9905-caeee48bc179",
-      "email": "admin2@gmail.com"
+      "id": "82db6942-07da-42e7-9215-ebae9654c3d3",
+      "email": "sami@test.com"
     }
   ]
 }
