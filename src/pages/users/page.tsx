@@ -1,11 +1,14 @@
 import {
   Suspense,
   useActionState,
+  useOptimistic,
+  useRef,
   //   useTransition,
 } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { CreateUserAction, DeleteUserAction } from "./action";
 import { useUsers } from "./use-users";
+import { Link } from "react-router-dom";
 
 type User = {
   id: string;
@@ -21,7 +24,7 @@ function ErrorFallback({ error }: { readonly error: unknown }) {
 }
 
 export function UsersPage() {
-  const {useUsersList, createUserAction, deleteUserAction} = useUsers();
+  const { useUsersList, createUserAction, deleteUserAction } = useUsers();
 
   //   const [users, setUsers] = useState<User[]>([]);
   //   const [email, setEmail] = useState("");
@@ -42,7 +45,10 @@ export function UsersPage() {
       <CreateUserForm createUserAction={createUserAction} />
       <ErrorBoundary fallbackRender={ErrorFallback}>
         <Suspense fallback={<div>Loading...</div>}>
-          <UsersList useUsersList={useUsersList} deleteUserAction={deleteUserAction} />
+          <UsersList
+            useUsersList={useUsersList}
+            deleteUserAction={deleteUserAction}
+          />
         </Suspense>
       </ErrorBoundary>
     </main>
@@ -50,20 +56,23 @@ export function UsersPage() {
 }
 
 export function CreateUserForm({
-//   refetchUsers,
-createUserAction,
+  //   refetchUsers,
+  createUserAction,
 }: {
-//   readonly refetchUsers: () => void;
-readonly createUserAction: CreateUserAction;
+  //   readonly refetchUsers: () => void;
+  readonly createUserAction: CreateUserAction;
 }) {
   //   const [email, setEmail] = useState(""); // Replaced by the uncontrolled form
   //   const [isPending, startTransition] = useTransition();
-  const [state, dispatch, isPending] = useActionState(createUserAction, { email: "" }
+  const [state, dispatch] = useActionState(
+    createUserAction,
+    { email: "" }
     // createUserAction({
     //   refetchUsers,
     //   // setEmail
     // }),
   );
+  const [optimisticState, setOptimisticState] = useOptimistic(state);
 
   //   const handleSubmit = async (event: React.FormEvent) => {
   //     event.preventDefault();
@@ -71,9 +80,18 @@ readonly createUserAction: CreateUserAction;
   //       dispatch({ email });
   //     });
   //   };
+  const form = useRef<HTMLFormElement>(null);
 
   return (
-    <form className="flex gap-2 items-start" action={dispatch}>
+    <form
+      className="flex gap-2 items-start"
+      ref={form}
+      action={(formData: FormData) => {
+        setOptimisticState({ email: "" });
+        dispatch(formData);
+        form.current?.reset();
+      }}
+    >
       {/* onSubmit={handleSubmit} */}
       <div className="flex flex-col">
         <input
@@ -81,16 +99,18 @@ readonly createUserAction: CreateUserAction;
           type="email"
           //   value={email}
           className="border p-2 rounded"
-          disabled={isPending}
-          defaultValue={state.email}
+          // disabled={isPending}
+          defaultValue={optimisticState.email}
           //   onChange={(event) => setEmail(event.target.value)}
         />
-        {state.error && <div className="text-red-500 mt-1">{state.error}</div>}
+        {optimisticState.error && (
+          <div className="text-red-500 mt-1">{optimisticState.error}</div>
+        )}
       </div>
       <div>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
-          disabled={isPending}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          // disabled={isPending}
           type="submit"
         >
           Add
@@ -102,21 +122,25 @@ readonly createUserAction: CreateUserAction;
 
 export function UsersList({
   deleteUserAction,
-  useUsersList
-//   usersPromise,
+  useUsersList,
+}: //   usersPromise,
 //   refetchUsers,
-}: {
+{
   readonly deleteUserAction: DeleteUserAction;
   readonly useUsersList: () => User[];
-//   readonly usersPromise: Promise<User[]>;
-//   readonly refetchUsers: () => void;
+  //   readonly usersPromise: Promise<User[]>;
+  //   readonly refetchUsers: () => void;
 }) {
   //   throw new Error("Test Error Boundary in UsersList");
   const users = useUsersList();
   return (
     <div className="flex flex-col gap-2">
       {users.map((user) => (
-        <UserCard key={user.id} user={user} deleteUserAction={deleteUserAction} />
+        <UserCard
+          key={user.id}
+          user={user}
+          deleteUserAction={deleteUserAction}
+        />
       ))}
     </div>
   );
@@ -138,17 +162,23 @@ export function UserCard({
   //     });
   //   };
 
-  const [state, handleDelete, isPending] = useActionState(deleteUserAction, {});
+  const [state, handleDelete] = useActionState(deleteUserAction, {});
 
   return (
     <>
       <div className="border p-2 rounded bg-gray-100 flex gap-2 items-center">
-        {user.email}
-        <form action={handleDelete} className="ml-auto">
+        <div className="max-w-[140px] break-words sm:max-w-none">{user.email}</div>
+        <form action={handleDelete} className="ml-auto flex items-center">
           <input type="hidden" name="id" value={user.id} />
+          <Link
+            to={`/${user.id}/tasks`}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto mr-1"
+          >
+            Tasks
+          </Link>
           <button
-            disabled={isPending}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-auto disabled:bg-gray-400"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-auto"
+            //   disabled={isPending}
             //   type="button"
             //   onClick={handleDelete}
             //   formAction={handleDelete}
