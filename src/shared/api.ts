@@ -3,7 +3,9 @@ export type User = {
   email: string;
 };
 
-export function fetchUsers() {
+// const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+export async function fetchUsers() {
+  // await sleep(3000);
   return fetch("http://localhost:3001/users")
     .then((res) => {
       if (!res.ok) {
