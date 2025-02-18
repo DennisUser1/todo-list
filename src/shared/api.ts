@@ -37,8 +37,8 @@ export type Task = {
   id: string;
   userId: string;
   title: string;
-  done: string;
-  createdAt: string;
+  done: boolean;
+  createdAt: number;
 };
 
 export type PaginatedResponse<T> = {
@@ -71,10 +71,10 @@ export function fetchTasks({
   return fetch(
     `http://localhost:3001/tasks?_page=${page}&_per_page=${per_page}&_sort=${
       sort.createdAt === "asc" ? "createdAt" : "-createdAt"
-    }&userId=${filters?.userId}&title=${filters?.title}`
+    }&userId=${filters?.userId}${filters?.title ? `&title=${filters.title}` : ""}`
   )
-  .then((res) => res.json() as Promise<PaginatedResponse<Task>>)
-  .then((r) => ({ ...r, page }));
+    .then((res) => res.json())
+    .then((r) => ({ ...r, page }));
 }
 
 export function createTask(task: Omit<Task, "id" | "createdAt">) {
