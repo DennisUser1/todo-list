@@ -4,7 +4,7 @@ import { useOnDebounce } from "./useOnDebounce";
 
 export function useSearch(defaultSearch: string, onSearch: (title: string) => void) {
     const [search, setSearch] = useState(defaultSearch);
-    const searchDebounce = useOnDebounce(1000);
+    const searchDebounce = useOnDebounce(300);
 
     const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
