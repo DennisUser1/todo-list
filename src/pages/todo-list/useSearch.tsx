@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useOnDebounce } from "./useOnDebounce";
 
-
 export function useSearch(defaultSearch: string, onSearch: (title: string) => void) {
     const [search, setSearch] = useState(defaultSearch);
     const searchDebounce = useOnDebounce(300);

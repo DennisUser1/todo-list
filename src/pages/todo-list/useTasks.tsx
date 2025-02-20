@@ -3,7 +3,7 @@ import { fetchTasks } from "../../shared/api";
 
 export function useTasks({ userId }: { userId: string }) {
   const defaultSearch = "";
-  const defaultCreatedAtSort = "asc";
+  const defaultCreatedAtSort = "desc";
   const [paginatedTasksPromise, setPaginatedTasksPromise] = useState(() =>
     fetchTasks({
       page: 1,

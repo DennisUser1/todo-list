@@ -132,7 +132,7 @@ export function UsersList({
   //   readonly refetchUsers: () => void;
 }) {
   //   throw new Error("Test Error Boundary in UsersList");
-  const users = useUsersList();
+  const users = useUsersList().slice().reverse();
   return (
     <div className="flex flex-col gap-2">
       {users.map((user) => (
